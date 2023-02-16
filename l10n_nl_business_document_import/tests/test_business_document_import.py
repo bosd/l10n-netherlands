@@ -33,3 +33,16 @@ class Testl10nNLBusinessDocumentImport(TransactionCase):
         partner_dict = {"nl_oin": "12345678901234567890"}
         res = bdio._match_partner(partner_dict, [])
         self.assertIn(res, [partner1, partner2])
+
+    def test_nomatch_partner_coc_oin(self):
+         partner3 = self.env["res.partner"].create(
+            {
+                "name": "Partner without coc or oin",
+                "supplier_rank": 1,
+                "is_company": True,
+                "nl_oin": "",
+            }
+        )
+        partner_dict = {"nl_oin": ""}
+        res = bdio._match_partner(partner_dict, [])
+        self.assertNotIn(res, partner3)
